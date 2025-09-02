@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EditData - Soluções Inteligentes em Automação</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset e estilos gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Animações */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        /* Cabeçalho moderno */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 12px;
+            color: #3b82f6;
+            -webkit-text-fill-color: #3b82f6;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: #3b82f6;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%233b82f6" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #1e293b;
+        }
+        
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            font-weight: 400;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #3b82f6;
+            border-color: #3b82f6;
+        }
+        
+        .btn-secondary:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Seção de Depoimentos */
+        .testimonials {
+            padding: 100px 0;
+            background: #ffffff;
+            text-align: center;
+        }
+        
+        .testimonials-header {
+            margin-bottom: 60px;
+        }
+        
+        .testimonials-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+        
+        .testimonials-header p {
+            color: #64748b;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Seção de Casos Reais */
+        .real-cases {
+            padding: 100px 0;
+            background: #f1f5f9;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+        
+        .section-title p {
+            color: #64748b;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .case-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .case-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(59, 130, 246, 0.9);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .case-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-mockup {
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chart-container {
+            width: 90%;
+            height: 80%;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-bars {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            align-items: end;
+            gap: 8px;
+            height: 60px;
+        }
+        
+        .bar {
+            background: linear-gradient(to top, #3b82f6, #60a5fa);
+            border-radius: 2px;
+            flex: 1;
+        }
+        
+        .bar:nth-child(1) { height: 30%; }
+        .bar:nth-child(2) { height: 60%; }
+        .bar:nth-child(3) { height: 45%; }
+        .bar:nth-child(4) { height: 80%; }
+        .bar:nth-child(5) { height: 35%; }
+        .bar:nth-child(6) { height: 70%; }
+        .bar:nth-child(7) { height: 55%; }
+        .bar:nth-child(8) { height: 90%; }
+        
+        .chart-stats {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: #94a3b8;
+            font-size: 0.75rem;
+        }
+        
+        .case-content {
+            padding: 25px;
+        }
+        
+        .case-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .case-content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+        
+        .case-description {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .case-result {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .case-result .result-label {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .case-result .result-text {
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        
+        .btn-solicitar {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-solicitar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Seção de Serviços */
+        .services {
+            padding: 100px 0;
+            background: #ffffff;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
+        }
+        
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        
+        .service-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        /* Seção de Contato */
+        .contact {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            text-align: center;
+            color: white;
+        }
+        
+        .contact h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .contact p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+        }
+        
+        .btn-light {
+            background: white;
+            color: #3b82f6;
+        }
+        
+        .btn-light:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        footer {
+            background: #1e293b;
+            padding: 60px 0 30px;
+            color: white;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section p,
+        .footer-section a {
+            color: #94a3b8;
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: block;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-section a:hover {
+            color: #3b82f6;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b82f6;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            color: #64748b;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero {
+                padding: 120px 0 80px;
+            }
+            
+            .cases-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    EditData
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#cases">Casos Reais</a></li>
+                    <li><a href="#services">Serviços</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content animate-fade-in">
+                <h1>Transformamos Processos em Soluções Inteligentes</h1>
+                <p class="subtitle">Especialistas em automação de planilhas, integração de APIs e desenvolvimento de sistemas personalizados com React, Next.js e tecnologias modernas</p>
+                <div class="cta-buttons">
+                    <a href="https://wa.me/5511982354531" class="btn btn-primary">
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp (11) 98235-4531
+                    </a>
+                    <a href="mailto:contato@editdata.com.br" class="btn btn-secondary">
+                        <i class="fas fa-envelope"></i>
+                        contato@editdata.com.br
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Depoimentos -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="testimonials-header">
+                <h2>"Okay, a EditData superou minhas expectativas."</h2>
+                <p>E outras coisas incríveis que nossos clientes dizem sobre nós.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Casos Reais -->
+    <section class="real-cases" id="cases">
+        <div class="container">
+            <div class="cases-grid">
+                <!-- Caso 1: Automação de Planilhas -->
+                <div class="case-card animate-fade-in">
+                    <div class="case-badge">Caso Real</div>
+                    <div class="case-image">
+                        <div class="dashboard-mockup">
+                            <div class="chart-container">
+                                <div class="chart-stats">
+                                    <div>📊 Dashboard Financeiro</div>
+                                    <div>💰 Multi-moeda</div>
+                                </div>
+                                <div class="chart-bars">
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="case-content">
+                        <div class="case-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3>Automação de Planilhas</h3>
+                        <p class="case-description">
+                            Criação de macros e automações para Excel e Google Sheets, eliminando tarefas repetitivas.
+                        </p>
+                        <div class="case-result">
+                            <div class="result-label">
+                                <i class="fas fa-check-circle"></i>
+                                Resultado:
+                            </div>
+                            <div class="result-text">
+                                Empresa reduziu 15h/semana em relatórios financeiros
+                            </div>
+                        </div>
+                        <button class="btn-solicitar" onclick="solicitarSimilar('automacao')">
+                            Solicitar Similar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Caso 2: Tratamento de Dados -->
+                <div class="case-card animate-fade-in">
+                    <div class="case-badge">Caso Real</div>
+                    <div class="case-image">
+                        <div class="dashboard-mockup">
+                            <div class="chart-container">
+                                <div class="chart-stats">
+                                    <div>📈 Análise de Dados</div>
+                                    <div>🔄 Processamento</div>
+                                </div>
+                                <div class="chart-bars">
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="case-content">
+                        <div class="case-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3>Tratamento de Dados</h3>
+                        <p class="case-description">
+                            Limpeza, formatação e estruturação de bases de dados para análises precisas.
+                        </p>
+                        <div class="case-result">
+                            <div class="result-label">
+                                <i class="fas fa-check-circle"></i>
+                                Resultado:
+                            </div>
+                            <div class="result-text">
+                                Base com 50K registros processada em minutos
+                            </div>
+                        </div>
+                        <button class="btn-solicitar" onclick="solicitarSimilar('dados')">
+                            Solicitar Similar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Caso 3: Dashboards Personalizados -->
+                <div class="case-card animate-fade-in">
+                    <div class="case-badge">Caso Real</div>
+                    <div class="case-image">
+                        <div class="dashboard-mockup">
+                            <div class="chart-container">
+                                <div class="chart-stats">
+                                    <div>📊 Dashboard Interativo</div>
+                                    <div>⚡ Tempo Real</div>
+                                </div>
+                                <div class="chart-bars">
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="case-content">
+                        <div class="case-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Dashboards Personalizados</h3>
+                        <p class="case-description">
+                            Criação de dashboards interativos e relatórios automáticos para tomada de decisões.
+                        </p>
+                        <div class="case-result">
+                            <div class="result-label">
+                                <i class="fas fa-check-circle"></i>
+                                Resultado:
+                            </div>
+                            <div class="result-text">
+                                Dashboard em tempo real para 5 filiais
+                            </div>
+                        </div>
+                        <button class="btn-solicitar" onclick="solicitarSimilar('dashboard')">
+                            Solicitar Similar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Serviços -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nossos Serviços</h2>
+                <p>Soluções completas em automação e desenvolvimento com tecnologias modernas</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card animate-fade-in">
+                    <div class="service-icon">
+                        <i class="fab fa-react"></i>
+                    </div>
+                    <h3>Desenvolvimento React/Next.js</h3>
+                    <p>Criamos aplicações web modernas e responsivas usando React, Next.js e tecnologias de ponta para máxima performance e experiência do usuário.</p>
+                </div>
+                <div class="service-card animate-fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Automação de Processos</h3>
+                    <p>Automatizamos processos repetitivos em planilhas Excel e Google Sheets, aumentando produtividade e eliminando erros manuais.</p>
+                </div>
+                <div class="service-card animate-fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3>Integração de APIs</h3>
+                    <p>Conectamos seus sistemas a APIs externas para sincronização de dados em tempo real e integração com plataformas como Trello, Slack e mais.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Contato -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2>Pronto para Transformar seus Processos?</h2>
+            <p>Entre em contato conosco hoje mesmo para uma consultoria gratuita e descubra como podemos automatizar e modernizar sua gestão de dados com as melhores tecnologias do mercado.</p>
+            <div class="cta-buttons">
+                <a href="https://wa.me/5511982354531" class="btn btn-light">
+                    <i class="fab fa-whatsapp"></i>
+                    Fale conosco pelo WhatsApp
+                </a>
+                <a href="mailto:contato@editdata.com.br" class="btn btn-secondary">
+                    <i class="fas fa-envelope"></i>
+                    Enviar E-mail
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>EditData</h3>
+                    <p>Especializada em automação de processos, desenvolvimento de aplicações modernas com React/Next.js e integração inteligente de dados.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Tecnologias</h3>
+                    <a href="#">React & Next.js</a>
+                    <a href="#">Excel VBA & Google Apps Script</a>
+                    <a href="#">APIs & Integrações</a>
+                    <a href="#">Automação de Processos</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <p><i class="fab fa-whatsapp"></i> (11) 98235-4531</p>
+                    <p><i class="fas fa-envelope"></i> contato@editdata.com.br</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 EditData - Soluções Inteligentes. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Função para solicitar serviço similar
+        function solicitarSimilar(tipo) {
+            const mensagens = {
+                'automacao': 'Olá! Vi o caso de automação de planilhas no seu portfólio e gostaria de solicitar algo similar para minha empresa.',
+                'dados': 'Olá! Me interessei pelo caso de tratamento de dados e gostaria de saber mais sobre como vocês podem me ajudar.',
+                'dashboard': 'Olá! Vi o dashboard personalizado no seu portfólio e gostaria de criar algo similar para minha empresa.'
+            };
+            
+            const mensagem = mensagens[tipo] || 'Olá! Gostaria de saber mais sobre os serviços da EditData.';
+            const whatsappUrl = `https://wa.me/5511982354531?text=${encodeURIComponent(mensagem)}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Animações suaves ao fazer scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observar elementos para animação
+        document.querySelectorAll('.animate-fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease-out';
+            observer.observe(el);
+        });
+
+        // Scroll suave para links de navegação
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Efeito no header ao fazer scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const header = document.querySelector('header');
+            
+            if (scrolled > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+            }
+        });
+    </script>
+</body>
+</html>
